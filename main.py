@@ -5,6 +5,7 @@
 
 # Import the required libraries
 from socket import *
+import os.path
 
 # Listening port for the server
 serverPort = 8080
@@ -25,13 +26,37 @@ while 1:
     # Accept a connection from a client
     connectionSocket, addr = serverSocket.accept()
 
+
     # Retrieve the message sent by the client
     request = connectionSocket.recv(1024)
 
-    print(request)
+    '''
+    Extract filename from the GET request
+    Open file if it exists
+    Read content of the file into string
+    Append the string to the HTTP 200 OK response
+    Otherwise HTTP 404 not found
+    
+    String value of request when content is appended to response
+    b'GET / HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n'
+    b'GET /html.jpg HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36\r\nAccept: image/webp,image/apng,image/*,*/*;q=0.8\r\nReferer: http://localhost:8080/\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n'
+    b'GET /servers.jpg HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36\r\nAccept: image/webp,image/apng,image/*,*/*;q=0.8\r\nReferer: http://localhost:8080/\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n'
+    b'GET /favicon.ico HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\nPragma: no-cache\r\nCache-Control: no-cache\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36\r\nAccept: image/webp,image/apng,image/*,*/*;q=0.8\r\nReferer: http://localhost:8080/\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n'
 
-    #create HTTP response
-    response = "HTTP /1.1 200 OK\n\nWelcome to my home page"
+    
+    '''
+
+    var = request.decode("utf-8").split(" ")
+    var2 = var[1]
+    print(var2)
+
+    #Checks whether file exsists
+    if os.path.isfile(var2):
+        response = "HTTP /1.1 200 OK\n\n"
+        with open(var2) as f:
+            response = response + f.read()
+    else:
+        response = "HTTP 404 not found\n\n"
 
     #send HTTP response back to the client
     connectionSocket.send(response.encode())
