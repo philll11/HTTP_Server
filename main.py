@@ -28,6 +28,8 @@ while 1:
     # Retrieve the message sent by the client
     request = connectionSocket.recv(1024)
 
+    print(request)
+
     #create HTTP response
     response = "HTTP /1.1 200 OK\n\nWelcome to my home page"
 
