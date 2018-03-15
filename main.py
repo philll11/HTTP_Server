@@ -45,19 +45,21 @@ while 1:
 
     
     '''
-
-    var = request.decode("utf-8").split(" ")
-    var2 = var[1]
-    print(var2)
-
+    
+    fileObject = request.decode("utf-8").split(" ")[1][1:]
+    #print(fileObject)
+    
     #Checks whether file exsists
-    if os.path.isfile(var2):
-        response = "HTTP /1.1 200 OK\n\n"
-        with open(var2) as f:
-            response = response + f.read()
+    if os.path.isfile(fileObject):
+        print("File exsists")
+        with open(fileObject) as f:
+            response = f.read()
     else:
+        print("File does not exsist")
         response = "HTTP 404 not found\n\n"
 
+    print(response)
+    
     #send HTTP response back to the client
     connectionSocket.send(response.encode())
 
