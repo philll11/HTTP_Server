@@ -34,7 +34,7 @@ while 1:
 
     #Checks whether file exsists
     if os.path.isfile(fileObject):
-        response = b"HTTP/1,1 200 OK\r\n"
+        response = b"HTTP/1,1 200 OK\n\n"
         #print("Image File exsists")
         with open(fileObject, 'rb') as f:
             response = response + f.read()
